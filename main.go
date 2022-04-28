@@ -33,11 +33,7 @@ func main() {
 	flag.Parse()
 
 	opts := &plugin.ServeOpts{
-		Debug: debugMode,
-
-		// TODO: update this string with the full name of your provider as used in your configs
-		ProviderAddr: "registry.terraform.io/hashicorp/clarity",
-
+		Debug:        debugMode,
 		ProviderFunc: provider.New(version),
 	}
 
