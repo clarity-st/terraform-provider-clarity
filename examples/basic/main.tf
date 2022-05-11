@@ -11,7 +11,7 @@ resource "clarity_service" "test" {
 }
 
 resource "clarity_resource" "dev" {
-  provider_slug = "staaging"
+  provider_slug = "staging"
   service_slug  = clarity_service.test.slug
   name          = "dev"
 
