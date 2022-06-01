@@ -22,6 +22,9 @@ A Clarity [service](https://docs.clarity.st/concepts/services.html).
 
 ### Optional
 
-- `id` (String) The ID of this resource.
 - `slug` (String) A slug for this service.
 - `unique` (Boolean) Enforce a unique name for the service.
+
+### Read-Only
+
+- `id` (String) The ID of this resource.

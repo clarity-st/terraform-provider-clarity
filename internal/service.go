@@ -89,17 +89,15 @@ func serviceCreate(ctx context.Context, d *schema.ResourceData, meta interface{}
 	}
 
 	d.SetId(service.Slug)
-	d.Set("slug", service.Slug)
 
 	tflog.Trace(ctx, "created a service")
 
-	return nil
+	return serviceRead(ctx, d, meta)
 }
 
 func serviceRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*clarity.Client)
 	slug := d.Id()
-
 	rsp, err := client.ListServices()
 	if err != nil {
 		return diag.FromErr(err)
