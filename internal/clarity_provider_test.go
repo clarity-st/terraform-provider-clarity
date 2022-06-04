@@ -47,7 +47,7 @@ func loadAWSSettigns() (string, string, string) {
 		account = v
 	} else {
 		account = "993614041743"
-	}3
+	}
 	if v, ok := os.LookupEnv("AWS_REGION"); ok {
 		region = v
 	} else {

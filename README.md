@@ -1,5 +1,6 @@
 # terraform-provider-clarity
 
+Terraform provider for [clarity.st](https://clarity.st), see further [documentation](https://docs.clarity.st).
 
 
 ## Testing
@@ -17,4 +18,14 @@ For [acceptance testing](https://www.terraform.io/plugin/sdkv2/testing/acceptanc
 # export CLARITY_PROVIDER_ROLE=...
 
 TF_ACC=1 go test -v ./internal
+```
+
+
+## Release
+
+Trigger the `release` action by pushing a new tag.
+
+```
+git tag -a v0.0.1 -m "Added documentation"
+git push origin v0.0.1
 ```

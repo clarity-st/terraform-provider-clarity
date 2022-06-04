@@ -1,0 +1,24 @@
+on:
+  pull_request
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    name: CI
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.17.6'
+
+      - name: Build & Test
+        run: |
+          go build -v './...'
+          go test -v -count 1 './...'
+
+      - name: Terraform acceptance tests
+        env:
+          CLARITY_API_TOKEN: ${{ secrets.CLARITY_API_TOKEN }}
+        run: |
+          TF_ACC=1 go test -v ./internal
