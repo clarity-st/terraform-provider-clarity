@@ -13,12 +13,13 @@ func TestAccService(t *testing.T) {
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccService,
+				Config: testAccProvider() + testAccService,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("clarity_service.test", "provider_slug", "staaging"),
-					resource.TestCheckResourceAttr("clarity_service.test", "name", "bar"),
 					resource.TestMatchResourceAttr(
-						"clarity_service.test", "slug", regexp.MustCompile("^ba")),
+						"clarity_provider.test", "slug", regexp.MustCompile("^terraform-test")),
+					resource.TestCheckResourceAttr("clarity_service.test", "name", "terraform-test"),
+					resource.TestMatchResourceAttr(
+						"clarity_service.test", "slug", regexp.MustCompile("^terraform-test")),
 				),
 			},
 			{
@@ -33,7 +34,7 @@ func TestAccService(t *testing.T) {
 
 const testAccService = `
 resource "clarity_service" "test" {
-  provider_slug = "staaging"
-  name = "bar"
+  provider_slug = clarity_provider.test.slug
+  name = "terraform-test"
 }
 `

@@ -79,6 +79,11 @@ type Configuration struct {
 	LambdaConfiguration LambdaConfiguration `json:"configuration"`
 }
 
+func (x Configuration) resourceName() string {
+	// FIX aws
+	return fmt.Sprintf("%s:%s", x.LambdaConfiguration.Name, x.LambdaConfiguration.Alias)
+}
+
 type LambdaConfiguration struct {
 	Name  string `json:"name"`
 	Alias string `json:"alias,omitempty"`
@@ -118,6 +123,20 @@ func (config *Client) CreateResource(serviceSlug string, rawreq CreateResourceRe
 	statusCode, output, err := config.do(http.MethodPost, path, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
+	}
+
+	if statusCode == http.StatusBadRequest {
+		var res Error
+		err = json.Unmarshal(output, &res)
+		if err != nil {
+			return nil, fmt.Errorf("Unhandled bad request decode: %w", err)
+		}
+
+		if res.Code == "service-candidate-not-found" {
+			return nil, fmt.Errorf("Could not find the underlying resource '%s'", rawreq.Configuration.resourceName())
+		}
+
+		return nil, fmt.Errorf("Unhandled http-error-code: %v", res)
 	}
 
 	if statusCode == http.StatusNotFound {

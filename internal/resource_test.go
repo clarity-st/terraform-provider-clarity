@@ -8,20 +8,23 @@ import (
 )
 
 func TestAccResource(t *testing.T) {
+	config := testAccProvider() + testAccService + testAccResource
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResource,
+				Config: config,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("clarity_resource.test", "provider_slug", "staaging"),
-					resource.TestCheckResourceAttr("clarity_resource.test", "service_slug", "fake-event"),
-					resource.TestCheckResourceAttr("clarity_resource.test", "name", "bar"),
-					resource.TestCheckResourceAttr("clarity_resource.test", "lambda.0.function_name", "api"),
+					resource.TestMatchResourceAttr(
+						"clarity_provider.test", "slug", regexp.MustCompile("^terraform-test")),
+					resource.TestMatchResourceAttr(
+						"clarity_service.test", "slug", regexp.MustCompile("^terraform-test")),
+					resource.TestCheckResourceAttr("clarity_resource.test", "name", "terraform-test"),
+					resource.TestCheckResourceAttr("clarity_resource.test", "lambda.0.function_name", "terraform-test"),
 					resource.TestCheckResourceAttr("clarity_resource.test", "lambda.0.alias", "clarity"),
 					resource.TestMatchResourceAttr(
-						"clarity_resource.test", "slug", regexp.MustCompile("^ba")),
+						"clarity_resource.test", "slug", regexp.MustCompile("^terraform-test")),
 				),
 			},
 			{
@@ -36,12 +39,12 @@ func TestAccResource(t *testing.T) {
 
 const testAccResource = `
 resource "clarity_resource" "test" {
-  provider_slug = "staaging"
-  service_slug = "fake-event"
-  name = "bar"
+  provider_slug = clarity_provider.test.slug
+  service_slug = clarity_service.test.slug
+  name = "terraform-test"
 
   lambda {
-    function_name = "api"
+    function_name = "terraform-test"
   }
 }
 `

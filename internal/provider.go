@@ -49,6 +49,7 @@ func New(version string) func() *schema.Provider {
 			ResourcesMap: map[string]*schema.Resource{
 				"clarity_service":  serviceResource(),
 				"clarity_resource": resourceResource(),
+				"clarity_provider": providerResource(),
 			},
 		}
 
@@ -61,7 +62,6 @@ func configure(version string, p *schema.Provider) func(context.Context, *schema
 	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 		host := d.Get("service_endpoint").(string)
 		accessToken := d.Get("clarity_api_token").(string)
-		fmt.Println(accessToken)
 
 		var diags diag.Diagnostics
 

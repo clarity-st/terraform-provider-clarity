@@ -25,8 +25,11 @@ A Clarity [resource](https://docs.clarity.st/concepts/resources.html).
 ### Optional
 
 - `deployment` (Block Set, Max: 1) Deployment configuration. (see [below for nested schema](#nestedblock--deployment))
-- `id` (String) The ID of this resource.
 - `slug` (String) A slug for this resource.
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--lambda"></a>
 ### Nested Schema for `lambda`
