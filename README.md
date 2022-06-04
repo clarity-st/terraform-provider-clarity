@@ -1,6 +1,6 @@
 # terraform-provider-clarity
 
-Terraform provider for [clarity.st](https://clarity.st), see further [documentation](https://docs.clarity.st).
+[Terraform provider](https://registry.terraform.io/providers/clarity-st/clarity) for [clarity.st](https://clarity.st), see further [documentation](https://docs.clarity.st).
 
 
 ## Testing
