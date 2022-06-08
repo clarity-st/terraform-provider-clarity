@@ -3,6 +3,7 @@ package internal
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -260,6 +261,11 @@ func resourceRead(ctx context.Context, d *schema.ResourceData, meta interface{})
 
 	internal, err := api.ReadResource(serviceSlug, resourceSlug)
 	if err != nil {
+		if errors.Is(err, clarity.ErrNotFound) {
+			d.SetId("")
+			return nil
+		}
+
 		return diag.FromErr(err)
 	}
 

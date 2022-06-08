@@ -114,7 +114,8 @@ func serviceRead(ctx context.Context, d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
-	return diag.Errorf("Not found")
+	d.SetId("")
+	return nil
 }
 
 func serviceDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {

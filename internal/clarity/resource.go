@@ -97,7 +97,7 @@ func (config *Client) ReadResource(serviceSlug string, resourceSlug string) (*In
 	}
 
 	if statusCode == http.StatusNotFound {
-		return nil, fmt.Errorf("Not found.")
+		return nil, ErrNotFound
 	}
 
 	if statusCode != http.StatusOK {

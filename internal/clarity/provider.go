@@ -91,7 +91,7 @@ func (config *Client) LoadProvider(slug string) (*Provider, error) {
 	}
 
 	if statusCode == http.StatusNotFound {
-		return nil, fmt.Errorf("Provider not found.")
+		return nil, ErrNotFound
 	}
 
 	if statusCode != http.StatusOK {
