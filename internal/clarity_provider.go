@@ -3,6 +3,7 @@ package internal
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/clarity-st/terraform-provider-clarity/internal/clarity"
@@ -183,6 +184,10 @@ func providerRead(ctx context.Context, d *schema.ResourceData, meta interface{})
 
 	rsp, err := client.LoadProvider(slug)
 	if err != nil {
+		if errors.Is(err, clarity.ErrNotFound) {
+			d.SetId("")
+			return nil
+		}
 		return diag.FromErr(err)
 	}
 
