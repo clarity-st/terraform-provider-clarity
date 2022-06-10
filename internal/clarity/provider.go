@@ -196,7 +196,7 @@ func (config *Client) authenticateProvider(info ProviderInfo) error {
 	return nil
 }
 
-func (config *Client) loadProviders() ([]Provider, error) {
+func (config *Client) LoadProviders() ([]Provider, error) {
 	statusCode, output, err := config.do(http.MethodGet, "providers", nil)
 	if err != nil {
 		return nil, err

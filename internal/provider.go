@@ -43,9 +43,10 @@ func New(version string) func() *schema.Provider {
 					Default:     "https://api.clarity.st",
 				},
 			},
-			//			DataSourcesMap: map[string]*schema.Resource{
-			//				"clarity_provider": dataSourceProvider(),
-			//			},
+			DataSourcesMap: map[string]*schema.Resource{
+				"clarity_provider": providerDatasource(),
+				"clarity_service":  serviceDatasource(),
+			},
 			ResourcesMap: map[string]*schema.Resource{
 				"clarity_service":  serviceResource(),
 				"clarity_resource": resourceResource(),

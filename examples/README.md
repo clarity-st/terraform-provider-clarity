@@ -1,4 +1,8 @@
-# Local development
+# Examples
+
+
+
+### Local development
 
 ```
 # ~/.terrform.rc
