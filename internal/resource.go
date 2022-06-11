@@ -137,6 +137,20 @@ func resourceCreate(ctx context.Context, d *schema.ResourceData, meta interface{
 	functionName := lambda["function_name"].(string)
 	alias := lambda["alias"].(string)
 
+	// Validate
+	service, err := api.LoadService(serviceSlug)
+	if err != nil {
+		return diag.Errorf("loading service '%s' for validation: %v", serviceSlug, err)
+	}
+	if service == nil {
+		return diag.Errorf("Unable to find service with slug '%s'", serviceSlug)
+	}
+	for _, r := range service.Resources {
+		if r.Name == name {
+			return diag.Errorf("Conflict. Resource with the name '%s' already exists on the specified service", name)
+		}
+	}
+
 	internal, err := api.CreateResource(serviceSlug, clarity.CreateResourceRequest{
 		Name:        name,
 		Provider:    providerSlug,

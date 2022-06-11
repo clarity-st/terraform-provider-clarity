@@ -80,6 +80,21 @@ func (config *Client) DeleteService(serviceSlug string) error {
 	return nil
 }
 
+func (config *Client) LoadService(slug string) (*Service, error) {
+	rsp, err := config.ListServices()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, service := range rsp.Services {
+		if service.Slug == slug {
+			return &service, nil
+		}
+	}
+
+	return nil, nil
+}
+
 func (config *Client) ListServices() (*ServicesListResponse, error) {
 	statusCode, output, err := config.do(http.MethodGet, "services", nil)
 	if err != nil {
