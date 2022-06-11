@@ -149,9 +149,20 @@ func providerCreate(ctx context.Context, d *schema.ResourceData, meta interface{
 		return diag.Errorf("Must specific exactly one of 'aws' or 'webhook'")
 	}
 
+	providers, err := client.LoadProviders()
+	if err != nil {
+		return diag.Errorf("loading provider to confirm uniqueness: %v", err)
+	}
+
+	for _, p := range providers {
+		if p.Name == name {
+			return diag.Errorf("Conflict. A provider with the name '%s' already exists.", name)
+		}
+	}
+
 	provider, err := client.CreateProvider(name, info)
 	if err != nil {
-		return diag.FromErr(err)
+		return diag.Errorf("creating provider: %v", err)
 	}
 
 	d.SetId(provider.Slug)

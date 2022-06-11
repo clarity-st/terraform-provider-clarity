@@ -37,17 +37,6 @@ func serviceResource() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validation.StringLenBetween(0, 128),
 			},
-			"unique": {
-				Description: "Enforce a unique name for the service.",
-				Type:        schema.TypeBool,
-				Optional:    true,
-				ForceNew:    true,
-				Default:     false,
-				DiffSuppressFunc: func(k, oldValue, newValue string, d *schema.ResourceData) bool {
-					return true
-				},
-				DiffSuppressOnRefresh: true,
-			},
 			"slug": {
 				Description: "A slug for this service.",
 				Type:        schema.TypeString,
@@ -63,18 +52,15 @@ func serviceCreate(ctx context.Context, d *schema.ResourceData, meta interface{}
 
 	providerSlug := d.Get("provider_slug").(string)
 	name := d.Get("name").(string)
-	unique := d.Get("unique").(bool)
 
-	// TODO better api support
-	if unique {
-		resp, err := client.ListServices()
-		if err != nil {
-			return diag.Errorf("loading services to confirm uniqueness: %v", err)
-		}
-		for _, s := range resp.Services {
-			if s.Name == name {
-				return diag.Errorf("The service name '%s' is not unique.", s.Name)
-			}
+	resp, err := client.ListServices()
+	if err != nil {
+		return diag.Errorf("loading services to confirm uniqueness: %v", err)
+	}
+
+	for _, s := range resp.Services {
+		if s.Name == name {
+			return diag.Errorf("Conflict. A service with the name '%s' already exissts.", s.Name)
 		}
 	}
 
@@ -98,23 +84,20 @@ func serviceCreate(ctx context.Context, d *schema.ResourceData, meta interface{}
 func serviceRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*clarity.Client)
 	slug := d.Id()
-	rsp, err := client.ListServices()
+
+	service, err := client.LoadService(slug)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	for _, service := range rsp.Services {
-		if service.Slug == slug {
-			d.Set("provider_slug", service.Provider.Slug)
-			d.Set("name", service.Name)
-			d.Set("slug", service.Slug)
-			// TODO fix
-			//			d.Set("unique", false)
-			return nil
-		}
+	if service != nil {
+		d.Set("provider_slug", service.Provider.Slug)
+		d.Set("name", service.Name)
+		d.Set("slug", service.Slug)
+	} else {
+		d.SetId("")
 	}
 
-	d.SetId("")
 	return nil
 }
 

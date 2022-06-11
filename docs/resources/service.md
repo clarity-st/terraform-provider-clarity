@@ -23,7 +23,6 @@ A Clarity [service](https://docs.clarity.st/concepts/services.html).
 ### Optional
 
 - `slug` (String) A slug for this service.
-- `unique` (Boolean) Enforce a unique name for the service.
 
 ### Read-Only
 
